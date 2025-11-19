@@ -14,10 +14,6 @@ st.title('Análise de Tendências por Gênero Musical')
 # Executa a função que lê o arquivo CSV e carrega os dados na memória
 df = carregar_dados()
 
-# Verifica de segurança: se o DataFrame estiver vazio, interrompe o script
-if df.empty:
-    st.stop()
- 
 # Cria a estrutura de navegação com abas para separar as diferentes visões do dashboard
 tab1, tab2, tab3 = st.tabs(["Rankings", "Comparações", "Análise Detalhada"])
 

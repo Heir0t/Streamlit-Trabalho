@@ -138,8 +138,8 @@ fig_radar = go.Figure()
 for idx, row in df_radar.iterrows():
     fig_radar.add_trace(go.Scatterpolar(
         r=[row[c] for c in caracteristicas], # Valores 
-        theta=[c.capitalize() for c in caracteristicas], # Categorias
-        fill='toself', # Preenche a área interna da linha
+        theta=[c.capitalize() for c in caracteristicas],
+        fill='toself', 
         name=row['track_genre'], 
         opacity=0.6
     ))

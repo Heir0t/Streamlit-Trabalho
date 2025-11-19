@@ -57,7 +57,7 @@ pip install -r requirements.txt
 3. Execute a aplicação:
 
 ```bash
-streamlit run analise_musical.py
+streamlit 01_Principal.py
 ```
 
 O navegador abrirá automaticamente no endereço **[http://localhost:8501](http://localhost:8501)**.

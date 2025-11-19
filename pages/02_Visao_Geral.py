@@ -11,17 +11,10 @@ st.title('Visao Geral do Dataset')
 
 df = carregar_dados()
 
-if df.empty:
-    st.stop()  
-
-# Cria uma seção expansível para os filtros, que já inicia aberta
 with st.expander("Filtros de Dados", expanded=True):
-    # Divide a largura do expander em duas colunas com proporção 3 para 1
     col_genero, col_explicit = st.columns([3, 1])
     
-    # Obtém uma lista única de gêneros ordenada alfabeticamente para o menu
     todos_generos = sorted(df['track_genre'].unique())
-    # Obtém os 10 gêneros mais frequentes para usar como seleção padrão
     top_10_padrao = df['track_genre'].value_counts().head(10).index.tolist()
 
     # Dentro da coluna
@@ -60,25 +53,22 @@ else:
     st.warning("Selecione pelo menos um genero para visualizar os dados")
     st.stop() 
 
-# Lógica de filtragem por Conteúdo Explícito
+#FIltro Explicito
 if filtro_explicit != "Todos":
-    # Converte a escolha Sim ou Não para o texto correspondente no banco de dados
     valor_para_filtrar = "Explicito" if filtro_explicit == "Sim" else "Nao Explicito"
-    # Filtra o DataFrame comparando a coluna 'explicit_str'
     df_filtrado = df_filtrado[df_filtrado['explicit_str'] == valor_para_filtrar]
 
-# Lógica de filtragem por Popularidade
+# Lógica Popularidade
 df_filtrado = df_filtrado[
     (df_filtrado['popularity'] >= filtro_pop[0]) & 
     (df_filtrado['popularity'] <= filtro_pop[1])   
 ]
 
-# Verificação final de segurança: se os filtros resultarem em zero dados
 if df_filtrado.empty:
     st.warning("Nenhum dado encontrado com essa combinacao de filtros")
     st.stop() 
 
-# Cria 4 colunas lado a lado para exibir métricas 
+# Cria 4 colunas 
 col1, col2, col3, col4 = st.columns(4)
 col1.metric("Total de Faixas", len(df_filtrado)) 
 col2.metric("Artistas Unicos", df_filtrado['artists'].nunique()) 
@@ -88,7 +78,7 @@ st.divider()
 
 st.subheader('Distribuicao de Popularidade por Genero Selecionado')
 
-# Criação do Boxplot (Diagrama de Caixa) usando Plotly Express
+# Criação do Boxplot Plotly 
 fig = px.box(df_filtrado,
     x='track_genre',   
     y='popularity',    
@@ -105,14 +95,13 @@ fig.update_layout(
     margin=dict(t=80), 
     showlegend=False  
 )
-# Renderiza o gráfico na tela do Streamlit
+# Renderiza o gráfico 
 st.plotly_chart(fig, use_container_width=True)
 
 st.divider()
 
 st.subheader('Relacao Energia vs Conteudo Explicito')
 
-# Criação do segundo Boxplot comparando Energia
 fig_energy = px.box(df_filtrado,
     x='explicit_str',  
     y='energy',       
