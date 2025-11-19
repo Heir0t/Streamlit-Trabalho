@@ -208,7 +208,7 @@ with col_corr2:
 st.divider()
 
 # --- Gráfico 4: Violin Plot (Distribuição + Densidade) ---
-st.subheader("🎻 Distribuição de Valência Musical")
+st.subheader("Distribuição de Valência Musical")
 
 # Cria gráfico de violino para mostrar a densidade dos dados
 fig_violin = px.violin(
