@@ -3,16 +3,12 @@ import pandas as pd
 from utils.carrega_dados import carregar_dados
 
 st.set_page_config(
-    page_title="Spotify Data Analysis",
+    page_title="Análise Spotify Tracks",
     page_icon="🎵",
     layout="wide"
 )
 
 df = carregar_dados()
-
-st.image("assets/images (1).png", 
-         use_container_width=True, 
-         caption="Explore o universo dos dados musicais")
 
 st.title("Spotify Tracks: Análise Interativa")
 

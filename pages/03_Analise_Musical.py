@@ -9,58 +9,60 @@ st.set_page_config(
     layout='wide'
 )
 
-st.title('🎵 Análise de Características Musicais')
+st.title('Análise de Características Musicais')
 
 df = carregar_dados()
 
 if df.empty:
     st.stop()
 
-# Sidebar com filtros
-with st.sidebar:
-    st.header("Filtros")
+with st.expander("Filtros de Dados", expanded=True):
+    col_genero, col_explicit = st.columns([3, 1])
     
-    # Filtro de gênero
-    generos_selecionados = st.multiselect(
-        "Gêneros",
-        options=sorted(df['track_genre'].unique()),
-        default=df['track_genre'].value_counts().head(5).index.tolist()
-    )
-    
-    # Filtro de ano (se existir coluna de ano/data)
-    st.divider()
-    
-    # Filtro de características musicais
-    st.subheader("Faixa de Características")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        min_danceability = st.slider(
-            "Dançabilidade mínima",
-            0.0, 1.0, 0.0, 0.1
-        )
-    with col2:
-        min_energy = st.slider(
-            "Energia mínima",
-            0.0, 1.0, 0.0, 0.1
+    todos_generos = sorted(df['track_genre'].unique())
+    top_10_padrao = df['track_genre'].value_counts().head(10).index.tolist()
+
+    with col_genero:
+        filtro_generos = st.multiselect(
+            "Selecione os Gêneros",
+            options=todos_generos,
+            default=top_10_padrao,
+            help="Filtre os dados por categoria musical"
         )
 
-# Aplicar filtros
+    with col_explicit:
+        filtro_explicit = st.selectbox(
+            "Conteúdo Explícito",
+            options=["Todos", "Sim", "Não"],
+            index=0
+        )
+
+    filtro_pop = st.slider(
+        "Faixa de Popularidade",
+        min_value=0,
+        max_value=100,
+        value=(0, 100)
+    )
+
 df_filtrado = df.copy()
 
-if generos_selecionados:
-    df_filtrado = df_filtrado[df_filtrado['track_genre'].isin(generos_selecionados)]
+if filtro_generos:
+    df_filtrado = df_filtrado[df_filtrado['track_genre'].isin(filtro_generos)]
 else:
-    st.warning("⚠️ Selecione pelo menos um gênero")
+    st.warning("Selecione pelo menos um gênero para visualizar os dados")
     st.stop()
 
+if filtro_explicit != "Todos":
+    valor_para_filtrar = "Explicito" if filtro_explicit == "Sim" else "Nao Explicito"
+    df_filtrado = df_filtrado[df_filtrado['explicit_str'] == valor_para_filtrar]
+
 df_filtrado = df_filtrado[
-    (df_filtrado['danceability'] >= min_danceability) &
-    (df_filtrado['energy'] >= min_energy)
+    (df_filtrado['popularity'] >= filtro_pop[0]) &
+    (df_filtrado['popularity'] <= filtro_pop[1])
 ]
 
 if df_filtrado.empty:
-    st.warning("Nenhum dado encontrado com esses filtros")
+    st.warning("Nenhum dado encontrado com essa combinação de filtros")
     st.stop()
 
 # Métricas principais
@@ -73,7 +75,7 @@ col4.metric("Valência Média", f"{df_filtrado['valence'].mean():.2f}")
 st.divider()
 
 # Gráfico 1: Scatter Plot Interativo - Dançabilidade vs Energia
-st.subheader("📊 Relação entre Dançabilidade e Energia")
+st.subheader("Relação entre Dançabilidade e Energia")
 
 fig_scatter = px.scatter(
     df_filtrado.sample(min(1000, len(df_filtrado))),  # Limitar para performance
@@ -101,7 +103,7 @@ st.plotly_chart(fig_scatter, use_container_width=True)
 st.divider()
 
 # Gráfico 2: Radar Chart - Perfil Musical por Gênero
-st.subheader("🎯 Perfil Musical Médio por Gênero")
+st.subheader("Perfil Musical Médio por Gênero")
 
 # Selecionar características para o radar
 caracteristicas = ['danceability', 'energy', 'valence', 'acousticness', 'instrumentalness', 'speechiness']
@@ -138,7 +140,7 @@ st.plotly_chart(fig_radar, use_container_width=True)
 st.divider()
 
 # Gráfico 3: Heatmap de Correlação
-st.subheader("🔥 Mapa de Calor - Correlação entre Características")
+st.subheader("Mapa de Calor - Correlação entre Características")
 
 col_corr1, col_corr2 = st.columns([2, 1])
 
@@ -172,11 +174,11 @@ with col_corr2:
     st.info("""
     **Como interpretar:**
     
-    🔴 **Vermelho intenso**: Correlação positiva forte
+    **Vermelho intenso**: Correlação positiva forte
     
-    🔵 **Azul intenso**: Correlação negativa forte
+    **Azul intenso**: Correlação negativa forte
     
-    ⚪ **Branco**: Sem correlação
+    **Branco**: Sem correlação
     
     Correlações próximas de ±1 indicam relação forte entre as características.
     """)
@@ -212,7 +214,7 @@ st.plotly_chart(fig_violin, use_container_width=True)
 st.divider()
 
 # Informações adicionais
-with st.expander("ℹ️ Sobre as Características Musicais"):
+with st.expander("Sobre as Características Musicais"):
     st.markdown("""
     ### Glossário de Atributos Musicais
     
@@ -226,7 +228,7 @@ with st.expander("ℹ️ Sobre as Características Musicais"):
     """)
 
 # Análise textual
-st.subheader("📈 Insights da Análise")
+st.subheader("Insights da Análise")
 
 col_insight1, col_insight2 = st.columns(2)
 

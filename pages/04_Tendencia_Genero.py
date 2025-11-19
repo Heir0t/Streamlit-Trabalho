@@ -10,7 +10,7 @@ st.set_page_config(
     layout='wide'
 )
 
-st.title('📈 Análise de Tendências por Gênero Musical')
+st.title('Análise de Tendências por Gênero Musical')
 
 df = carregar_dados()
 
@@ -18,7 +18,7 @@ if df.empty:
     st.stop()
 
 # Tabs para diferentes visualizações
-tab1, tab2, tab3 = st.tabs(["🏆 Rankings", "📊 Comparações", "🔍 Análise Detalhada"])
+tab1, tab2, tab3 = st.tabs(["Rankings", "Comparações", "Análise Detalhada"])
 
 with tab1:
     st.header("Rankings de Gêneros Musicais")
@@ -33,7 +33,7 @@ with tab1:
         )
     
     # Gráfico 1: Barras Horizontais - Top Gêneros
-    st.subheader(f"🥇 Top {top_n} Gêneros por {metrica_ranking.capitalize()}")
+    st.subheader(f"Top {top_n} Gêneros por {metrica_ranking.capitalize()}")
     
     df_top = (df.groupby('track_genre')[metrica_ranking]
               .mean()
@@ -151,7 +151,7 @@ with tab2:
     st.divider()
     
     # Gráfico 4: Box Plot Comparativo - Popularidade
-    st.subheader("📦 Distribuição de Popularidade")
+    st.subheader("Distribuição de Popularidade")
     
     fig_box_comp = px.box(
         df_comp,
@@ -174,7 +174,7 @@ with tab2:
     st.plotly_chart(fig_box_comp, use_container_width=True)
     
     # Tabela comparativa
-    st.subheader("📋 Tabela Comparativa")
+    st.subheader("Tabela Comparativa")
     
     df_tabela = df_comp.groupby('track_genre').agg({
         'popularity': 'mean',
@@ -212,7 +212,7 @@ with tab3:
     st.divider()
     
     # Gráfico 5: Histograma - Distribuição de Popularidade
-    st.subheader(f"📊 Distribuição de Popularidade - {genero_selecionado}")
+    st.subheader(f"Distribuição de Popularidade - {genero_selecionado}")
     
     fig_hist = px.histogram(
         df_genero,
@@ -239,7 +239,7 @@ with tab3:
     st.divider()
     
     # Gráfico 6: Scatter 3D - Análise Multidimensional
-    st.subheader(f"🎲 Análise 3D - {genero_selecionado}")
+    st.subheader(f"Análise 3D - {genero_selecionado}")
     
     # Pegar amostra para performance
     df_sample = df_genero.sample(min(500, len(df_genero)))
@@ -276,7 +276,7 @@ with tab3:
     st.divider()
     
     # Top faixas do gênero
-    st.subheader(f"🌟 Top 10 Faixas Mais Populares - {genero_selecionado}")
+    st.subheader(f"Top 10 Faixas Mais Populares - {genero_selecionado}")
     
     df_top_tracks = (df_genero
                      .nlargest(10, 'popularity')[['track_name', 'artists', 'popularity', 'duration_min']]
@@ -286,7 +286,7 @@ with tab3:
     st.dataframe(df_top_tracks, use_container_width=True)
     
     # Características médias do gênero
-    st.subheader("📊 Perfil Musical Médio")
+    st.subheader("Perfil Musical Médio")
     
     col_perfil1, col_perfil2 = st.columns(2)
     
