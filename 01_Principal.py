@@ -34,7 +34,7 @@ with col_intro:
     """)
 
 with col_metrics:
-    st.markdown("### Raio-X do Dataset")
+    st.markdown("### Info do Dataset")
     
     total_faixas = df.shape[0]
     total_artistas = df['artists'].nunique()
@@ -83,4 +83,4 @@ with st.expander("Clique para espiar a Amostra dos Dados (Top 10 linhas)"):
     st.caption(f"Mostrando as primeiras 10 linhas de {total_faixas} registros.")
 
 st.sidebar.markdown("---")
-st.sidebar.info("💡 **Dica:** Use o modo 'Dark' do Streamlit para uma melhor experiência visual.")
+st.sidebar.info("**Dica:** Use o modo 'Dark' do Streamlit para uma melhor experiência visual.")
